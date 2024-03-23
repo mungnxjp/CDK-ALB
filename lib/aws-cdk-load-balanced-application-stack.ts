@@ -7,7 +7,6 @@ import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 import { Duration } from 'aws-cdk-lib';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
-import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 
 export class AwsCdkLoadBalancedApplicationStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -87,16 +86,21 @@ export class AwsCdkLoadBalancedApplicationStack extends cdk.Stack {
     autoscalingGroup.connections.allowFrom(alb, ec2.Port.tcp(80));
 
     // Define your hosted zone
-    const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
-      domainName: 'mungnx.net', // Replace this with your domain name
-      privateZone: false, // Update if your hosted zone is private
+    const hostedZoneName = 'mungnx.net';
+    const hostedZoneID = 'Z052701835KP1220GLIRP'
+
+
+    const hostedZone = route53.HostedZone.fromHostedZoneAttributes(this,'MyHostZone',{
+
+      hostedZoneId : hostedZoneID,
+      zoneName : hostedZoneName
     });
 
     // Create a record in Route 53 to point to the load balancer
     new route53.ARecord(this, 'AliasRecord', {
       zone: hostedZone,
       target: route53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(alb)),
-      recordName: 'mungnx.net', // Replace with your domain name
+      recordName: 'lap81.mungnx.net', // Replace with your domain name
     });
   }
 }
