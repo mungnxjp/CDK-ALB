@@ -32,6 +32,7 @@ export class AwsCdkLoadBalancedApplicationStack extends cdk.Stack {
       vpc: defaultVpc,
     });
     securityGroup.addIngressRule(ec2.Peer.ipv4('0.0.0.0/0'), ec2.Port.tcp(80), 'Added by a CDK stack');
+    securityGroup.addIngressRule(ec2.Peer.ipv4('0.0.0.0/0'), ec2.Port.tcp(443), 'Added by a HTTPS');
 
     const userData = ec2.UserData.forLinux();
     userData.addCommands('yum update -y', 'yum install -y httpd.x86_64', 'service httpd start', 'echo “Hello World from $(hostname -f)” > /var/www/html/index.html');
@@ -66,7 +67,7 @@ export class AwsCdkLoadBalancedApplicationStack extends cdk.Stack {
       port: 443,
       certificates: [
         // Replace with your SSL certificate ARN
-        elbv2.ListenerCertificate.fromArn('arn:aws:acm:us-east-1:983245592084:certificate/c726e90f-00bb-4024-92ab-29635b10c031'),
+        elbv2.ListenerCertificate.fromArn('arn:aws:acm:us-east-1:xxxxxxxxxx:certificate/xxxxxxxxx'),
       ],
       defaultAction: elbv2.ListenerAction.fixedResponse(200, {
         contentType: 'text/plain',
@@ -87,13 +88,13 @@ export class AwsCdkLoadBalancedApplicationStack extends cdk.Stack {
 
     // Define your hosted zone
     const hostedZoneName = 'mungnx.net';
-    const hostedZoneID = 'Z052701835KP1220GLIRP'
+    const hostedZoneID = 'xxxxxxxxx'
 
 
-    const hostedZone = route53.HostedZone.fromHostedZoneAttributes(this,'MyHostZone',{
+    const hostedZone = route53.HostedZone.fromHostedZoneAttributes(this, 'MyHostZone', {
 
-      hostedZoneId : hostedZoneID,
-      zoneName : hostedZoneName
+      hostedZoneId: hostedZoneID,
+      zoneName: hostedZoneName
     });
 
     // Create a record in Route 53 to point to the load balancer

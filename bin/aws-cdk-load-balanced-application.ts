@@ -19,7 +19,7 @@ new AwsCdkLoadBalancedApplicationStack(app, 'AwsCdkLoadBalancedApplicationStack'
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
   env: {
-    account: '983245592084', // Replace with your AWS account ID
+    account: 'xxxxxxxxxxx', // Replace with your AWS account ID
     region: 'us-east-1', // Replace with the appropriate region
   },
 });
